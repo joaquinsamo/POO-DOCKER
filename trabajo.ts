@@ -1,4 +1,4 @@
-lass Turbina
+class Turbina
 {
     private  numTurbinas:number = 0;
     public constructor( n :number) 
