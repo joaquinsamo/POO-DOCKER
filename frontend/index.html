@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Aeroplanos</title>
+</head>
+<body>
+
+<h1>CRUD Aeroplanos ✈️</h1>
+
+<h2>Crear Aeroplano</h2>
+<input id="id" placeholder="ID">
+<button onclick="crear()">Crear</button>
+
+<h2>Lista</h2>
+<button onclick="listar()">Cargar Aeroplanos</button>
+
+<ul id="lista"></ul>
+
+<script>
+const API = "http://localhost:3000/aeroplanos";
+
+function crear(){
+    const id = document.getElementById("id").value;
+
+    fetch(API,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            id: Number(id),
+            tren: { neumaticos:2, amortiguadores:3, retractil:true },
+            cubierta: { cabinaTripulacion:true, cabinaVuelo:true, sistemaEmergencia:true, tanques:4, puertas:4 }
+        })
+    })
+    .then(res=>res.json())
+    .then(()=>listar());
+}
+
+function listar(){
+    fetch(API)
+    .then(res=>res.json())
+    .then(data=>{
+        const lista = document.getElementById("lista");
+        lista.innerHTML = "";
+
+        data.forEach(a=>{
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ID: ${a.id}
+                <button onclick="eliminar(${a.id})">Eliminar</button>
+            `;
+            lista.appendChild(li);
+        });
+    });
+}
+
+function eliminar(id){
+    fetch(API + "/" + id,{ method:"DELETE"})
+    .then(()=>listar());
+}
+</script>
+
+</body>
+</html>
